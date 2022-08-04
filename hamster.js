@@ -1,0 +1,130 @@
+/*
+_______________________________
+
+Project HAMSTER v1.0
+Made by Wilzzu
+_______________________________
+
+Script made for finding 
+P2000 hamster patterns
+on the Steam marketplace
+
+Start by setting the
+refresh value on the bottom
+and pasting this script to your
+browser's developer console
+
+- 3-5 seconds is recommended
+when there's less than 10 pages
+
+- 10 seconds is recommended
+when there's more than 10 pages
+
+_______________________________
+*/
+
+clear();
+const hamster = () => {
+	// Global values
+	let item = document.getElementsByClassName("csgofloat-itemseed");
+	let listings = document.getElementsByClassName("market_listing_row").length - 1;
+	let style =
+		"font-weight: bold; font-size: 50px;color: white; text-shadow: 3px 3px 0 rgb(217,31,38), 6px 6px 0 rgb(226,91,14) , 9px 9px 0 rgb(245,221,8) , 12px 12px 0 rgb(5,148,68) , 15px 15px 0 rgb(2,135,206) , 18px 18px 0 rgb(4,77,145) , 21px 21px 0 rgb(42,21,113)";
+
+	// Search for listings
+	while (item.length < listings) {
+		console.log("%cSearching for listings...", "color: DodgerBlue");
+		item = document.getElementsByClassName("csgofloat-itemseed");
+		window.scrollTo(0, document.body.scrollHeight);
+	}
+
+	// When all listings are loaded search for certain paint seed
+	console.log("%cLoaded all " + item.length + " listings!", "color: LightGreen");
+	let found = false;
+	for (i = 0; i < item.length; i++) {
+		// Show notification when correct paint seed is found
+		if (item[i].innerText == "Paint Seed: 125") {
+			found = true;
+			console.log("%c HAMSTER FOUND!!", style);
+		}
+
+		// Delete all the wrong paint seeds
+		else {
+			item[i].parentElement.parentElement.parentElement.style.display = "none";
+		}
+	}
+
+	// If no correct paint seed is found from the page try going to the next one
+	if (!found) {
+		let curPage = document.querySelector(".active").innerText;
+		let newPage = curPage;
+		console.log(
+			"%cNo hamsters found :(\n" + "%cChanging page in " + refreshTime + " seconds",
+			"color: LightCoral",
+			"color: DodgerBlue"
+		);
+
+		setTimeout(() => {
+			document.getElementsByClassName("pagebtn")[1].click();
+			let tries = 0;
+			let retries = 0;
+			let failed = false;
+			let manual = false;
+
+			// Listen for page change
+			let interval = setInterval(() => {
+				if (curPage == newPage && !manual) {
+					tries++;
+					console.log("%cTrying to load next page...", "color: Orange");
+					newPage = document.querySelector(".active").innerText;
+
+					// If page hasn't changed after 20 tries try changing it again
+					// If that doesn't work skip the page and try the next one
+					// If that also fails send an error message
+					if (tries >= 20) {
+						tries = 0;
+						retries++;
+						if (retries >= 2 && !failed) {
+							retries = 0;
+							failed = true;
+							console.log(
+								"%cFailed to load page " +
+									document.querySelector(".active").nextElementSibling.innerText +
+									"%c\nTrying to load page " +
+									document.querySelector(".active").nextElementSibling.nextElementSibling
+										.innerText +
+									"next",
+								"color: LightCoral",
+								"color: DodgerBlue"
+							);
+							document.querySelector(".active").nextElementSibling.nextElementSibling.click();
+						} else if (retries >= 2) {
+							console.log(
+								"%cFailed to load the next two pages, try loading them manually",
+								"color: LightCoral"
+							);
+							manual = true;
+						} else {
+							console.log("%cRestarting page load", "color: DodgerBlue");
+							document.getElementsByClassName("pagebtn")[1].click();
+						}
+					}
+				} else if (curPage == newPage) {
+					newPage = document.querySelector(".active").innerText;
+				} else {
+					clearInterval(interval);
+					hamster();
+				}
+			}, 500);
+		}, 1000 * refreshTime);
+	}
+};
+
+// Set custom refresh time by changing the value below
+//----------------------------------------------------
+
+refreshTime = 3
+
+//----------------------------------------------------
+// hamster
+hamster();
