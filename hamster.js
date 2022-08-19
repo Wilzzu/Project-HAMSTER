@@ -17,7 +17,7 @@ browser's developer console
 - 3-5 seconds is recommended
 when there's less than 10 pages
 
-- 10 seconds is recommended
+- 15 seconds is recommended
 when there's more than 10 pages
 
 _______________________________
@@ -116,8 +116,15 @@ const hamster = () => {
 				}, 1000 * refreshTime);
 			}
 		} else {
+			let fail = false;
 			let paint = document.getElementsByClassName("csgofloat-itemseed");
-			if (paint[paint.length - 1].innerText.includes("Paint Seed")) {
+			for (j = 0; j < paint.length; j++) {
+				if (!paint[j].innerText.includes("Paint Seed")) {
+					fail = true;
+					break;
+				}
+			}
+			if (!fail) {
 				item = paint;
 				search();
 			} else {
@@ -127,6 +134,8 @@ const hamster = () => {
 					setTimeout(() => {
 						console.log("%cLoading listings...", "color: DodgerBlue");
 						tries++;
+						let scrollingElement = document.scrollingElement || document.body;
+						scrollingElement.scrollTop = scrollingElement.scrollHeight;
 						search();
 					}, 100);
 			}
