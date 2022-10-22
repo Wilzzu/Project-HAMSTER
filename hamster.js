@@ -147,7 +147,12 @@ const hamster = () => {
 //----------------------------------------------------
 
 refreshTime = 15;
+//refreshTime = parseInt(prompt("Enter refresh time: "));
 
 //----------------------------------------------------
 // hamster
 hamster();
+
+/*
+document.querySelector("#listing_3957001118129425160 > div.market_listing_item_name_block.extension__row > csgofloat-item-row-wrapper").shadowRoot.querySelector("div").innerText.split(" ")[3]
+*/
