@@ -40,14 +40,14 @@ const hamster = () => {
 			let found = false;
 			for (i = 0; i < item.length; i++) {
 				// Show notification when correct paint seed is found
-				if (item[i].innerText == "Paint Seed: 125") {
+				if (item[i].innerText.split(" ")[3] == "125") {
 					found = true;
 					console.log("%c HAMSTER FOUND!!", style);
 				}
 
 				// Delete all the wrong paint seeds
 				else {
-					item[i].parentElement.parentElement.parentElement.style.display = "none";
+					item[i].getRootNode().host.parentElement.parentElement.style.display = "none";
 				}
 			}
 
@@ -117,9 +117,19 @@ const hamster = () => {
 			}
 		} else {
 			let fail = false;
-			let paint = document.getElementsByClassName("csgofloat-itemseed");
+			let paint = [];
+			for (i = 1; i <= listings; i++) {
+				let info = document
+					.getElementsByClassName("market_listing_row")
+					[i].querySelector("csgofloat-item-row-wrapper");
+				if (info) paint.push(info.shadowRoot.querySelector("div"));
+			}
+
 			for (j = 0; j < paint.length; j++) {
-				if (!paint[j].innerText.includes("Paint Seed")) {
+				if (
+					paint[j].innerText.split(" ").length >= 4 &&
+					paint[j].innerText.split(" ")[3].length <= 0
+				) {
 					fail = true;
 					break;
 				}
@@ -147,12 +157,7 @@ const hamster = () => {
 //----------------------------------------------------
 
 refreshTime = 15;
-//refreshTime = parseInt(prompt("Enter refresh time: "));
 
 //----------------------------------------------------
 // hamster
 hamster();
-
-/*
-document.querySelector("#listing_3957001118129425160 > div.market_listing_item_name_block.extension__row > csgofloat-item-row-wrapper").shadowRoot.querySelector("div").innerText.split(" ")[3]
-*/
