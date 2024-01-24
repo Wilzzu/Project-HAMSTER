@@ -27,7 +27,7 @@ clear();
 const hamster = () => {
 	// Global values
 	let item = undefined;
-	let listings = document.getElementsByClassName("market_listing_row").length - 1;
+	let listings = document.getElementById("searchResultsRows").children.length - 1;
 	let style =
 		"font-weight: bold; font-size: 50px;color: white; text-shadow: 3px 3px 0 rgb(217,31,38), 6px 6px 0 rgb(226,91,14) , 9px 9px 0 rgb(245,221,8) , 12px 12px 0 rgb(5,148,68) , 15px 15px 0 rgb(2,135,206) , 18px 18px 0 rgb(4,77,145) , 21px 21px 0 rgb(42,21,113)";
 	let tries = 0;
@@ -40,7 +40,7 @@ const hamster = () => {
 			let found = false;
 			for (i = 0; i < item.length; i++) {
 				// Show notification when correct paint seed is found
-				if (item[i].innerText.split(" ")[3] == "125") {
+				if (item[i].innerText.split(" ")[3] == pattern) {
 					found = true;
 					console.log("%c HAMSTER FOUND!!", style);
 				}
@@ -120,8 +120,9 @@ const hamster = () => {
 			let paint = [];
 			for (i = 1; i <= listings; i++) {
 				let info = document
-					.getElementsByClassName("market_listing_row")
-					[i].querySelector("csgofloat-item-row-wrapper");
+					.getElementById("searchResultsRows")
+					.children[i].getElementsByClassName("market_listing_item_name_block")[0]
+					.querySelector("csfloat-item-row-wrapper");
 				if (info) paint.push(info.shadowRoot.querySelector("div"));
 			}
 
@@ -153,11 +154,12 @@ const hamster = () => {
 	};
 	search();
 };
-// Set custom refresh time by changing the value below
-//----------------------------------------------------
+// Set custom refresh time and pattern by changing the values below
+//------------------------------------------------------------------
 
-refreshTime = 15;
+let refreshTime = 15;
+let pattern = 125;
 
-//----------------------------------------------------
+//-------------------------------------------------------------------
 // hamster
 hamster();
