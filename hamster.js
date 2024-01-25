@@ -1,13 +1,15 @@
 /*
 _______________________________
 
-Project HAMSTER v1.0
+Project HAMSTER v1.1
 Made by Wilzzu
 _______________________________
 
-Script made for finding 
-P2000 hamster patterns
-on the Steam marketplace
+Script originally made for 
+finding P2000 hamster patterns
+on the Steam marketplace, but
+can be used for finding any
+patterns now!
 
 Start by setting the
 refresh value on the bottom
@@ -40,9 +42,9 @@ const hamster = () => {
 			let found = false;
 			for (i = 0; i < item.length; i++) {
 				// Show notification when correct paint seed is found
-				if (item[i].innerText.split(" ")[3] == pattern) {
+				if (pattern.includes(item[i].innerText.split(" ")[3])) {
 					found = true;
-					console.log("%c HAMSTER FOUND!!", style);
+					console.log("%c PATTERN FOUND!!", style);
 				}
 
 				// Delete all the wrong paint seeds
@@ -56,7 +58,7 @@ const hamster = () => {
 				let curPage = document.querySelector(".active").innerText;
 				let newPage = curPage;
 				console.log(
-					"%cNo hamsters found :(\n" + "%cChanging page in " + refreshTime + " seconds",
+					"%cNo patterns found :(\n" + "%cChanging page in " + refreshTime + " seconds",
 					"color: LightCoral",
 					"color: DodgerBlue"
 				);
@@ -154,12 +156,14 @@ const hamster = () => {
 	};
 	search();
 };
-// Set custom refresh time and pattern by changing the values below
-//------------------------------------------------------------------
+
+// Set custom refresh time and pattern(s) by changing the values below
+//--------------------------------------------------------------------
 
 let refreshTime = 15;
-let pattern = 125;
+let pattern = [125, 555];
 
-//-------------------------------------------------------------------
-// hamster
+//--------------------------------------------------------------------
+
+// Start script
 hamster();
