@@ -42,7 +42,7 @@ const hamster = () => {
 			let found = false;
 			for (i = 0; i < item.length; i++) {
 				// Show notification when correct paint seed is found
-				if (pattern.includes(item[i].innerText.split(" ")[3])) {
+				if (pattern.includes(parseInt(item[i].innerText.split(" ")[3]))) {
 					found = true;
 					console.log("%c PATTERN FOUND!!", style);
 				}
@@ -161,7 +161,7 @@ const hamster = () => {
 //--------------------------------------------------------------------
 
 let refreshTime = 15;
-let pattern = [125, 555];
+let pattern = [125, 555, 583];
 
 //--------------------------------------------------------------------
 
