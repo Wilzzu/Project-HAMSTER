@@ -1,7 +1,7 @@
 /*
 _______________________________
 
-Project HAMSTER v1.1
+Project HAMSTER v1.2
 Made by Wilzzu
 _______________________________
 
