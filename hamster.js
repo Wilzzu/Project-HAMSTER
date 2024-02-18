@@ -33,6 +33,7 @@ const hamster = () => {
 	let style =
 		"font-weight: bold; font-size: 50px;color: white; text-shadow: 3px 3px 0 rgb(217,31,38), 6px 6px 0 rgb(226,91,14) , 9px 9px 0 rgb(245,221,8) , 12px 12px 0 rgb(5,148,68) , 15px 15px 0 rgb(2,135,206) , 18px 18px 0 rgb(4,77,145) , 21px 21px 0 rgb(42,21,113)";
 	let tries = 0;
+	let listingsFail = false;
 
 	const search = () => {
 		// Search for listings
@@ -46,7 +47,23 @@ const hamster = () => {
 				// Show notification when correct paint seed is found
 				if (pattern.includes(parseInt(item[i].innerText.split(" ")[3]))) {
 					found = true;
-					console.log("%c PATTERN FOUND!!", style);
+					console.log("%c PATTERN " + item[i].innerText.split(" ")[3] + " FOUND!!", style);
+
+					// Play sound
+					let successAudio = new Audio(
+						"https://cdn.pixabay.com/audio/2023/01/07/audio_35fb2f73bf.mp3"
+					);
+					successAudio.volume = 0.25;
+					successAudio.play();
+
+					// Highlight the listing
+					item[i].getRootNode().host.parentElement.parentElement.style.backgroundColor =
+						"rgba(150, 255, 0, 0.2)";
+					item[i].getRootNode().host.parentElement.parentElement.style.border = "2px solid #74C006";
+					item[i].getRootNode().host.parentElement.parentElement.style.borderRadius = "8px";
+					item[i].getRootNode().host.parentElement.parentElement.style.padding = "8px";
+					item[i].getRootNode().host.parentElement.parentElement.style.boxShadow =
+						"0 0 16px #74C006";
 				}
 
 				// Delete all the wrong paint seeds
@@ -71,13 +88,12 @@ const hamster = () => {
 					let tries = 0;
 					let retries = 0;
 					let failed = false;
-					let manual = false;
 
 					// Listen for page change
 					let interval = setInterval(() => {
-						if (curPage == newPage && !manual) {
+						if (curPage == newPage) {
 							tries++;
-							console.log("%cTrying to load next page...", "color: Orange");
+							if (!failed) console.log("%cTrying to load next page...", "color: Orange");
 							newPage = document.querySelector(".active").innerText;
 
 							// If page hasn't changed after 20 tries try changing it again
@@ -92,20 +108,20 @@ const hamster = () => {
 									console.log(
 										"%cFailed to load page " +
 											document.querySelector(".active").nextElementSibling.innerText +
-											"%c\nTrying to load page " +
-											document.querySelector(".active").nextElementSibling.nextElementSibling
-												.innerText +
-											"next",
+											"%c\nTrying again using another method",
 										"color: LightCoral",
 										"color: DodgerBlue"
 									);
-									document.querySelector(".active").nextElementSibling.nextElementSibling.click();
+									document.querySelector(".active").nextElementSibling.click();
 								} else if (retries >= 2) {
 									console.log(
-										"%cFailed to load the next two pages, try loading them manually",
+										"%cFailed to load the next page, trying again in 30 seconds...",
 										"color: LightCoral"
 									);
-									manual = true;
+									setTimeout(() => {
+										console.log("%cRestarting page load", "color: DodgerBlue");
+										document.getElementsByClassName("pagebtn")[1].click();
+									}, 1000 * 30);
 								} else {
 									console.log("%cRestarting page load", "color: DodgerBlue");
 									document.getElementsByClassName("pagebtn")[1].click();
@@ -132,6 +148,14 @@ const hamster = () => {
 			}
 
 			for (j = 0; j < paint.length; j++) {
+				// Remove rank
+				if (paint[j].innerText.includes("Rank")) {
+					let content = paint[j].innerText.split(" ");
+					content.splice(2, 2);
+					paint[j].innerText = content.join(" ");
+				}
+
+				// Check if paint seed is valid
 				if (
 					!paint[j].innerText.split(" ")[3] ||
 					paint[j].innerText.split(" ")[3].length <= 0 ||
@@ -145,8 +169,20 @@ const hamster = () => {
 				item = paint;
 				search();
 			} else {
-				if (tries >= 1000) {
+				if (tries >= 1 && !listingsFail) {
+					listingsFail = true;
+					tries = 0;
+					console.log("%cFailed to load listings, trying again in 5 seconds", "color: LightCoral");
+					setTimeout(() => {
+						search();
+					}, 5000);
+				} else if (tries >= 1) {
 					console.log("%cFailed to load listings, try refreshing the page", "color: LightCoral");
+					let failAudio = new Audio(
+						"https://cdn.pixabay.com/audio/2022/12/13/audio_34d1e8985e.mp3"
+					);
+					failAudio.volume = 0.35;
+					failAudio.play();
 				} else
 					setTimeout(() => {
 						console.log("%cLoading listings...", "color: DodgerBlue");
@@ -170,4 +206,9 @@ let pattern = [125, 555, 583, 478];
 //--------------------------------------------------------------------
 
 // Start script
+console.log(
+	"%cInitiating a search for pattern(s): %c" + pattern.join(", "),
+	"color: LawnGreen",
+	"color: FloralWhite"
+);
 hamster();
