@@ -40,7 +40,9 @@ const hamster = () => {
 			// When all listings are loaded search for certain paint seed
 			console.log("%cLoaded all " + item.length + " listings!", "color: LightGreen");
 			let found = false;
+			const foundPatterns = [];
 			for (i = 0; i < item.length; i++) {
+				foundPatterns.push(item[i].innerText.split(" ")[3]);
 				// Show notification when correct paint seed is found
 				if (pattern.includes(parseInt(item[i].innerText.split(" ")[3]))) {
 					found = true;
@@ -52,6 +54,7 @@ const hamster = () => {
 					item[i].getRootNode().host.parentElement.parentElement.style.display = "none";
 				}
 			}
+			console.log("%cFound patterns: " + foundPatterns.join(", "), "color: PapayaWhip");
 
 			// If no correct paint seed is found from the page try going to the next one
 			if (!found) {
@@ -130,8 +133,9 @@ const hamster = () => {
 
 			for (j = 0; j < paint.length; j++) {
 				if (
-					paint[j].innerText.split(" ").length >= 4 &&
-					paint[j].innerText.split(" ")[3].length <= 0
+					!paint[j].innerText.split(" ")[3] ||
+					paint[j].innerText.split(" ")[3].length <= 0 ||
+					paint[j].innerText.split(" ")[3].length >= 5
 				) {
 					fail = true;
 					break;
@@ -161,7 +165,7 @@ const hamster = () => {
 //--------------------------------------------------------------------
 
 let refreshTime = 15;
-let pattern = [125, 555, 583];
+let pattern = [125, 555, 583, 478];
 
 //--------------------------------------------------------------------
 
