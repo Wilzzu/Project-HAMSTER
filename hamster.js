@@ -78,7 +78,7 @@ const hamster = () => {
 				let curPage = document.querySelector(".active").innerText;
 				let newPage = curPage;
 				console.log(
-					"%cNo patterns found :(\n" + "%cChanging page in " + refreshTime + " seconds",
+					"%cNo correct patterns found :(\n" + "%cChanging page in " + refreshTime + " seconds",
 					"color: LightCoral",
 					"color: DodgerBlue"
 				);
@@ -169,14 +169,14 @@ const hamster = () => {
 				item = paint;
 				search();
 			} else {
-				if (tries >= 1 && !listingsFail) {
+				if (tries >= 100 && !listingsFail) {
 					listingsFail = true;
 					tries = 0;
 					console.log("%cFailed to load listings, trying again in 5 seconds", "color: LightCoral");
 					setTimeout(() => {
 						search();
 					}, 5000);
-				} else if (tries >= 1) {
+				} else if (tries >= 100) {
 					console.log("%cFailed to load listings, try refreshing the page", "color: LightCoral");
 					let failAudio = new Audio(
 						"https://cdn.pixabay.com/audio/2022/12/13/audio_34d1e8985e.mp3"
